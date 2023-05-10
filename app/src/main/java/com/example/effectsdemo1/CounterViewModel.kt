@@ -18,5 +18,22 @@ class CounterViewModel:ViewModel() {
     private val _uiEventFlow = MutableSharedFlow<UIEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
 
+    private var total = 0.0
+
+    private fun addToTotal(){
+      total += _screenState.value.inputValue.toDouble()
+        _screenState.value = _screenState.value.copy(
+            displayingResult = "Total is $total"
+        )
+    }
+
+    private fun resetTotal() {
+        total = 0.0
+        _screenState.value = _screenState.value.copy(
+            displayingResult = "Total is $total",
+            inputValue = ""
+        )
+    }
+
 
 }
