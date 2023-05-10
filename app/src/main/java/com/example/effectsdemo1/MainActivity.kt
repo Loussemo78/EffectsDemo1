@@ -42,17 +42,24 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     context: Context = LocalContext.current
 ) {
-
+    var round by remember { mutableStateOf(1) }
     var total by remember { mutableStateOf(0.0) }
     var input by remember { mutableStateOf("") }
 
-    LaunchedEffect(key1 = true, ){
-        Toast.makeText(context,"Please, start counting..",Toast.LENGTH_SHORT).show()
-    }
+    val scaffoldState : ScaffoldState = rememberScaffoldState()
 
 
 
-    Column(
+    Scaffold(scaffoldState = scaffoldState) {
+        LaunchedEffect(key1 = round, ){
+           // Toast.makeText(context,"Please, start counting round $round",Toast.LENGTH_SHORT).show()
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = "Please, start counting round $round",
+                duration = SnackbarDuration.Short,
+
+            )
+        }
+        Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(50.dp),
@@ -85,6 +92,11 @@ fun MainScreen(
             modifier = modifier.fillMaxWidth(),
             onClick = {
                 total += input.toDouble()
+                if (total> 300){
+                  total = 0.0
+                    input = ""
+                    round++
+                }
             }
         ) {
             Text(
@@ -93,5 +105,6 @@ fun MainScreen(
                 fontWeight = FontWeight.Bold
             )
         }
+    }
     }
 }
