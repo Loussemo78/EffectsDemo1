@@ -3,8 +3,10 @@ package com.example.effectsdemo1
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
 class CounterViewModel:ViewModel() {
     private val _screenState = mutableStateOf(MainScreenState(
@@ -23,7 +25,9 @@ class CounterViewModel:ViewModel() {
     private fun addToTotal(){
       total += _screenState.value.inputValue.toDouble()
         _screenState.value = _screenState.value.copy(
-            displayingResult = "Total is $total"
+            displayingResult = "Total is $total",
+            isCountButtonVisible = false
+
         )
     }
 
@@ -31,8 +35,43 @@ class CounterViewModel:ViewModel() {
         total = 0.0
         _screenState.value = _screenState.value.copy(
             displayingResult = "Total is $total",
-            inputValue = ""
+            inputValue = "",
+            isCountButtonVisible = false
         )
+    }
+
+    fun onEvent(event: CounterEvent){
+        when(event){
+            is CounterEvent.ValueEntered -> {
+                _screenState.value = _screenState.value.copy(
+                    inputValue = event.value,
+                    isCountButtonVisible = true
+                )
+            }
+
+            is CounterEvent.CounterButtonClicked -> {
+                addToTotal()
+                viewModelScope.launch {
+                    _uiEventFlow.emit(
+                        UIEvent.ShowMessage(
+                            message = "Value added successfully"
+                        )
+                    )
+                }
+            }
+
+            is CounterEvent.ResetButtonClicked -> {
+                resetTotal()
+                viewModelScope.launch {
+                    _uiEventFlow.emit(
+                        UIEvent.ShowMessage(
+                            message = "Value reset successfully"
+                        )
+                    )
+                }
+            }
+        }
+
     }
 
 
