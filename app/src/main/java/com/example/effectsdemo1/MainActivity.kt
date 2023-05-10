@@ -46,7 +46,9 @@ fun MainScreen(
     var total by remember { mutableStateOf(0.0) }
     var input by remember { mutableStateOf("") }
 
-    Toast.makeText(context,"Please, start counting..",Toast.LENGTH_SHORT).show()
+    LaunchedEffect(key1 = true, ){
+        Toast.makeText(context,"Please, start counting..",Toast.LENGTH_SHORT).show()
+    }
 
 
 
