@@ -2,6 +2,7 @@ package com.example.effectsdemo1
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -44,6 +45,9 @@ fun MainScreen(
 
     var total by remember { mutableStateOf(0.0) }
     var input by remember { mutableStateOf("") }
+
+    Toast.makeText(context,"Please, start counting..",Toast.LENGTH_SHORT).show()
+
 
 
     Column(
